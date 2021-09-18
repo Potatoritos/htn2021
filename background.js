@@ -40,7 +40,7 @@ function getCleanURL(url) {
 }
 
 function redirect(data) {
-    var page = chrome.extension.getURL("pages/redirect.html");
+    var page = chrome.extension.getURL("pages/hardblock.html");
     console.log(data);
     chrome.storage.local.set({prevURL: data.url}, function() {
         console.log("prevURL stored: " + data.url);
@@ -70,5 +70,6 @@ function updateListener(urls) {
 }
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+
 });
 
