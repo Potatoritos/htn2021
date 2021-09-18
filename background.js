@@ -2,12 +2,17 @@ function initBlockList() {
     console.log("hi");
 
     chrome.storage.sync.get({blockList: []}, function(data) {
+        // actual code
         //chrome.storage.sync.set({blockList: data.blockList}, function() {
           //  console.log("blockList saved");
         //});
+        
+        // testing code
         chrome.storage.sync.set({blockList: ['duckduckgo.com']}, function() {
-            console.log("blockList saved");
+            console.log("blockList saved: " + data.blockList);
         });
+
+        updateListener(data.blockList)
     });
 
 }
@@ -35,7 +40,7 @@ function getCleanURL(url) {
 }
 
 function redirect(data) {
-    var page = chrome.extension.getURL("redirect.html");
+    var page = chrome.extension.getURL("pages/redirect.html");
     console.log(data);
     chrome.storage.local.set({prevURL: data.url}, function() {
         console.log("prevURL stored: " + data.url);
@@ -43,21 +48,27 @@ function redirect(data) {
     return {redirectUrl: page};
 }
 
+function urlToPattern(url) {
+    if (!url.startsWith("*.") && !url.includes("://")) url = "*." + url;
+    if (!url.endsWith("/*")) url = url + "/*";
+    if (!url.includes("://")) url = "*://" + url;
+    return url;
+}
+
 function updateListener(urls) {
+    var patterns = [];
+    urls.forEach(function(url) {
+        patterns.push(urlToPattern(url));
+    });
+    console.log(patterns);
+
     if (chrome.webRequest.onBeforeRequest.hasListener(redirect)) {
         chrome.webRequest.onBeforeRequest.removeListener(redirect);
     }
 
-    chrome.webRequest.onBeforeRequest.addListener(redirect, {urls: urls}, ["blocking"]);
+    chrome.webRequest.onBeforeRequest.addListener(redirect, {urls: patterns}, ["blocking"]);
 }
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    if (typeof changeInfo.url !== "undefined" // improve how redirect page is detected later(?)
-            && changeInfo.url.startsWith("chrome-extension://")
-            && changeInfo.url.endsWith("/redirect.html")) {
-        console.log(changeInfo);
-        // find a way to edit the page so that it can go back to the distracting site
-    }
 });
 
-updateListener(["https://duckduckgo.com/*"]);
