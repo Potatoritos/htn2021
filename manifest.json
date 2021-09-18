@@ -1,0 +1,7 @@
+{
+    "name": "name of extension",
+    "description": "description here",
+    "version": "0.1.0",
+    "manifest_version": 2,
+    "icons": {}
+}
