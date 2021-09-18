@@ -1,12 +1,12 @@
 {
-    "name": "name of extension",
-    "description": "description here",
+    "name": "Lighthouse",
+    "description": "Brings people out of the fog of distraction",
     "version": "0.1.0",
     "manifest_version": 2,
     "icons": {},
     "browser_action":{
         "default_popup":"popup.html",
-        "default_title": "Name"
+        "default_title": "Lighthouse"
     },
     "permissions":[
         "activeTab"
