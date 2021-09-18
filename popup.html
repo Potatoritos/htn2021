@@ -35,30 +35,59 @@
                             </button>
                         </div>
                         <span class="text-sm">Why do you want to start a break?</span>
-                        <textarea class="w-full mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-
-                        </textarea>
+                        <textarea class="w-full mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
                     </form>
                 </div>
                 <div id="section-2" class="hidden">
-                    Blocked Sites:
+                    <form>
+                        <span class="text-sm"><select class="rounded-md  text-sm">
+                                <option>Blocked</option>
+                                <option>Whitelisted</option>
+                            </select> Sites:</span>
+                        <textarea
+                            class="w-full mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                            placeholder="Enter sites"></textarea>
+                            <p class="text-xs">Enter sites each on one line, like "example.com" or "example.com/folder". We will block/allow all URLs with that base.</p>
+                        <!-- This example requires Tailwind CSS v2.0+ -->
+                        <br>
+                        <div class="flex items-center justify-between">
+                            <span class="flex-grow flex flex-col" id="availability-label">
+                                <span class="text-sm font-medium text-gray-900">Enable Soft Block</span>
+                                <span class="text-sm text-gray-500">Soft Block gives you the option to access the blocked websites.
+                                    <span class="font-bold">Note:</span> You will receive less coins.
+                                </span>
+                            </span>
+                            <!-- Enabled: "bg-blue-600", Not Enabled: "bg-gray-200" -->
+                            <button id="toggleSoftBlock" type="button"
+                                class="bg-gray-200 relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                role="switch" aria-checked="false" aria-labelledby="availability-label">
+                                <span class="sr-only">Use setting</span>
+                                <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" -->
+                                <span id="toggleSoftBlockButton" aria-hidden="true"
+                                    class="translate-x-0 pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200"></span>
+                            </button>
+                        </div>
+                        <div class="hidden" name="classesTailwind" class=" bg-blue-600 translate-x-5 hidden"></div>
+                        <br>
+                        <button class="round p-2 m-1 bg-gray-100 rounded shadow">Save Changes</button>
+                    </form>
                 </div>
                 <div id="section-3" class="hidden">
                     Settings:
                 </div>
             </div>
             <nav class="fixed bottom-0 inset-x-0 flex justify-between shadow ">
-                <a href="#" class="w-full block p-3 px-3 text-center hover:bg-gray-100" id="showSection1">
-                    <svg class="h-4 mx-auto" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <a href="#" class="w-full block p-3 px-3 text-center hover:bg-gray-100 text-blue-700" id="showSection1">
+                    <svg class="h-4 mx-auto" xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                   </svg>Home</a>
                 <a href="#" class="w-full block p-3 px-3 text-center hover:bg-gray-100" id="showSection2">
-                    <svg class="h-4 mx-auto" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg class="h-4 mx-auto" xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                       </svg>
                       Blocked Sites</a>
                 <a href="#" class="w-full block p-3 px-3 text-center hover:bg-gray-100" id="showSection3">
-                    <svg class="h-4 mx-auto" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg class="h-4 mx-auto" xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
