@@ -2,8 +2,42 @@
 <html>
     <head>
         <title>Lighthouse</title>
+        <link rel="stylesheet" href="./assets/css/tailwind.css" >
+        <style>
+            html{
+                min-height: 500px;
+                min-width: 300px;
+            }
+        </style>
     </head>
     <body>
-        <h1>test</h1>
+        <div class="w-full bg-white">
+            <div class="relative">
+                <header class="shadow h-8">
+                    <h1 class="text-center">Lighthouse</h1>
+
+                </header>
+                <section>
+
+                </section>
+                test
+            </div>
+            <nav class="fixed bottom-0 inset-x-0 flex justify-between shadow ">
+                <a href="" class="w-full block p-2 px-3 text-center hover:bg-gray-100">
+                    <svg class="h-4 mx-auto" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  </svg>Home</a>
+                <a href="" class="w-full block p-2 px-3 text-center hover:bg-gray-100">
+                    <svg class="h-4 mx-auto" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                      </svg>
+                      Blocked Sites</a>
+            </nav>
+        </div>
     </body>
+    <script>
+        window.resizeTo(1920, 768);
+
+
+    </script>
 </html>
