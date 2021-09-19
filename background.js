@@ -9,7 +9,8 @@ var default_settings = {
 };
 
 function initSettings() {
-
+    // make sure all keys in default_settings are in chrome storage
+    // and populate settings with settings
     for (let [key, val] of Object.entries(default_settings)) {
         chrome.storage.sync.get({[key]: val}, function(data) {
             chrome.storage.sync.set({[key]: data[key]}, function() {
@@ -17,18 +18,23 @@ function initSettings() {
             });
         });
     }
-
 }
 
 function updateSetting(key, val) {
     settings[key] = val;
-    console.log(`${key} changed: ${val}`);
-    if (((key === "blockList" && settings.blockEnabled) || (key === "blockEnabled" && val)) && !settings.softblockEnabled) {
-        console.log("enabling.");
+    console.log(`[SETTING CHANGE] ${key} = ${val}`);
+
+    // if statement hell
+    if ((((key === "blockList" || key === "isWhitelist" || key === "softblockEnabled") && settings.blockEnabled) || (key === "blockEnabled" && val)) && !settings.softblockEnabled && !settings.isWhitelist) {
+        console.log("Hard block (blacklist) enabled");
         updateListener(settings.blockList);
     }
+    if ((((key === "blockList" || key === "isWhitelist" || key === "softblockEnabled") && settings.blockEnabled) || (key === "blockEnabled" && val)) && !settings.softblockEnabled && settings.isWhitelist) {
+        console.log("Hard block (whitelist) enabled");
+        updateListener(["<all_urls>"]);
+    }
     if ((key === "softblockEnabled" && val) || (key === "blockEnabled" && !val)) {
-        console.log("disabling.");
+        console.log("Hard block disabled.");
         chrome.webRequest.onBeforeRequest.removeListener(redirect);
     }
 }
@@ -61,12 +67,33 @@ function getCleanURL(url) {
     return url.toLowerCase();
 }
 
+function urlIsDistracting(url) {
+    url = getCleanURL(url);
+    if (settings.isWhitelist) {
+        return !settings.blockList.includes(url);
+    } else {
+        return settings.blockList.includes(url);
+    }
+}
+
 function redirect(data) {
-    var page = chrome.extension.getURL("pages/hardblock.html");
-    return {redirectUrl: page};
+    console.log(data);
+    if (settings.isWhitelist) {
+        var page;
+        if (urlIsDistracting(data.url)) {
+            page = chrome.extension.getURL("pages/hardblock.html");
+        } else {
+            page = data.url;
+        }
+        return {redirectUrl: page};
+    } else {
+        var page = chrome.extension.getURL("pages/hardblock.html");
+        return {redirectUrl: page};
+    }
 }
 
 function urlToPattern(url) {
+    if (url === "<all_urls>") return url;
     if (!url.startsWith("*.") && !url.includes("://")) url = "*." + url;
     if (!url.endsWith("/*")) url = url + "/*";
     if (!url.includes("://")) url = "*://" + url;
@@ -106,9 +133,8 @@ function loop() {
             var b = true;
             tabs.forEach(function(tab) {
                 if (urlIsWebsite(tab.url)) {
-                    var url = getCleanURL(tab.url);
-                    if (settings.blockList.includes(url)) {
-                        b = false;
+                    if (urlIsDistracting(tab.url)) {
+                        b = false
                     }
                 }
             });
@@ -146,13 +172,9 @@ function openSoftblockTab() {
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     // soft block
     if (typeof changeInfo.url !== "undefined" && urlIsWebsite(changeInfo.url)) {
-
-        var url = getCleanURL(changeInfo.url);
-
-        if (settings.blockList.includes(url)) {
+        if (urlIsDistracting(changeInfo.url)) {
             openSoftblockTab();
         }
-
     }
 });
 
