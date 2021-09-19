@@ -28,14 +28,19 @@
             </section>
             <div class="py-2 px-2 ">
                 <div id="section-1">
-                    <form>
+                    <form id="startBreak">
                         <div class="items-center">
-                            <button>
+                            <button type="submit" ">
                                 <svg class="h-2/4 w-2/4 mx-auto" xmlns="http://www.w3.org/2000/svg" width="1792" height="1792" viewBox="0 0 1792 1792"><path d="M1664 896q0 156-61 298t-164 245-245 164-298 61-298-61-245-164-164-245-61-298q0-182 80.5-343t226.5-270q43-32 95.5-25t83.5 50q32 42 24.5 94.5t-49.5 84.5q-98 74-151.5 181t-53.5 228q0 104 40.5 198.5t109.5 163.5 163.5 109.5 198.5 40.5 198.5-40.5 163.5-109.5 109.5-163.5 40.5-198.5q0-121-53.5-228t-151.5-181q-42-32-49.5-84.5t24.5-94.5q31-43 84-50t95 25q146 109 226.5 270t80.5 343zm-640-768v640q0 52-38 90t-90 38-90-38-38-90v-640q0-52 38-90t90-38 90 38 38 90z"/></svg>
                             </button>
                         </div>
-                        <span class="text-sm">Why do you want to start a break?</span>
-                        <textarea class="w-full mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
+                        <div class="text-sm">
+                            Block for 
+                            <input type="number" class="h-5 w-20" min="5" required>
+                            minutes
+                        </div>
+                        <span class="text-sm">Why do you want to start blocking websites?</span>
+                        <textarea id="blockReason" class="w-full mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required></textarea>
                     </form>
                 </div>
                 <div id="section-2" class="hidden">
@@ -46,7 +51,7 @@
                             </select> Sites:</span>
                         <textarea
                             class="w-full mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                            placeholder="Enter sites" id="blockedSitesTextArea"></textarea>
+                            placeholder="Enter sites" id="blockedSitesTextArea" required></textarea>
                             <p class="text-xs">Enter sites each on one line, like "example.com" or "example.com/folder". We will block/allow all URLs with that base.</p>
                         <!-- This example requires Tailwind CSS v2.0+ -->
                         <br>
@@ -74,7 +79,7 @@
                     </form>
                 </div>
                 <div id="section-3" class="hidden">
-                    Settings:
+                    <p class="text-base">Settings:</p>
                 </div>
             </div>
             <nav class="fixed bottom-0 inset-x-0 flex justify-between shadow ">

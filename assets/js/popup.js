@@ -79,3 +79,22 @@ if (form.attachEvent) {
 } else {
     form.addEventListener("submit", processForm);
 }
+
+
+function turnOnBlock(e) {
+    if (e.preventDefault) e.preventDefault();
+    
+    var blockReasonValue = document.getElementById("blockReason").value;
+    chrome.storage.sync.set({blockReason: blockReasonValue}, function() {
+        console.log("BlockReason saved: ");
+        console.log(blockReasonValue);
+    });
+    return false;
+}
+var form2 = document.getElementById('startBreak');
+if (form2.attachEvent) {
+    form2.attachEvent("submit", turnOnBlock);
+} else {
+    form2.addEventListener("submit", turnOnBlock);
+}
+
