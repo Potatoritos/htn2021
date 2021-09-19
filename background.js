@@ -1,19 +1,7 @@
 function initBlockList() {
     console.log("hi");
 
-    chrome.storage.sync.get({blockList: []}, function(data) {
-        // actual code
-        //chrome.storage.sync.set({blockList: data.blockList}, function() {
-          //  console.log("blockList saved");
-        //});
-        
-        // testing code
-        chrome.storage.sync.set({blockList: ['duckduckgo.com']}, function() {
-            console.log("blockList saved: " + data.blockList);
-        });
-
-        updateListener(data.blockList)
-    });
+    var softblockEnabled;
 
     chrome.storage.sync.get({isWhitelist: false}, function(data) {
         chrome.storage.sync.set({isWhitelist: data.isWhitelist}, function() {
@@ -24,9 +12,34 @@ function initBlockList() {
     chrome.storage.sync.get({softblockEnabled: false}, function(data) {
         chrome.storage.sync.set({softblockEnabled: data.softblockEnabled}, function() {
             console.log("softblockEnabled saved: " + data.softblockEnabled);
+            softblockEnabled = data.softblockEnabled;
         });
     });
 
+    chrome.storage.sync.get({blockList: []}, function(data) {
+        // actual code
+        //chrome.storage.sync.set({blockList: data.blockList}, function() {
+          //  console.log("blockList saved");
+        //});
+        
+        // testing code
+        chrome.storage.sync.set({blockList: ['duckduckgo.com']}, function() {
+            console.log("blockList saved: ");
+            console.log(data.blockList);
+        });
+
+
+        //if (softblockEnabled) {
+        //for testing purposes:
+        if (false) {
+            updateListener(data.blockList);
+        }
+    });
+
+}
+
+function urlIsWebsite(url) {
+    return !url.startsWith("chrome://") && !url.startsWith("chrome-extension://") && !url.startsWith("about:");
 }
 
 chrome.runtime.onInstalled.addListener(function() {
@@ -53,10 +66,10 @@ function getCleanURL(url) {
 
 function redirect(data) {
     var page = chrome.extension.getURL("pages/hardblock.html");
-    console.log(data);
-    chrome.storage.local.set({prevURL: data.url}, function() {
-        console.log("prevURL stored: " + data.url);
-    })
+    //console.log(data);
+    //chrome.storage.local.set({prevURL: data.url}, function() {
+    //    console.log("prevURL stored: " + data.url);
+    //})
     return {redirectUrl: page};
 }
 
@@ -68,11 +81,12 @@ function urlToPattern(url) {
 }
 
 function updateListener(urls) {
+    // hard block
     var patterns = [];
     urls.forEach(function(url) {
         patterns.push(urlToPattern(url));
     });
-    console.log(patterns);
+    console.log("patterns: " + patterns);
 
     if (chrome.webRequest.onBeforeRequest.hasListener(redirect)) {
         chrome.webRequest.onBeforeRequest.removeListener(redirect);
@@ -81,17 +95,80 @@ function updateListener(urls) {
     chrome.webRequest.onBeforeRequest.addListener(redirect, {urls: patterns}, ["blocking"]);
 }
 
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    if (typeof changeInfo.url !== "undefined" && !changeInfo.url.startsWith("chrome://")) {
+var isLooping = false;
 
-        console.log(changeInfo);
+function isDistractionOpen() {
+    chrome.storage.sync.get({blockList: []}, function(data) {
+        chrome.tabs.query({}, function(tabs) {
+            tabs.forEach(function(tab) {
+
+                if (urlIsWebsite(tab.url)) {
+                
+                    var url = getCleanURL(tab.url);
+
+                    console.log("=====");
+                    console.log(url);
+                    console.log(data.blockList);
+                    console.log(data.blockList.includes(url));
+                    console.log("=====");
+
+                    if (data.blockList.includes(url)) {
+                        return true;
+                    }
+                }   
+
+            });
+        });
+    });
+    return false;
+}
+
+function loopSoftblockTab() {
+    console.log("loopSoftblockTab() start");
+    if (!isDistractionOpen()) {
+        console.log("loopSoftblockTab() wtf");
+        isLooping = false;
+        return;
+    }
+    console.log("loopSoftblockTab()");
+    
+    chrome.tabs.query({}, function(tabs) {
+        tabs.forEach(function(tab) {
+            if (tab.url.startsWith("chrome-extension://") && tab.url.endsWith("/pages/softblock.html")) {
+                chrome.tabs.remove(tab.id, function() { });
+            }
+        });
+    });
+    chrome.tabs.create({ url: "pages/softblock.html" });
+
+    setTimeout(loopSoftblockTab, 10000);
+}
+
+function openSoftblockTab() {
+    if (isLooping) return;
+    console.log("openSoftblockTab()");
+    chrome.tabs.query({}, function(tabs) {
+        tabs.forEach(function(tab) {
+            if (tab.url.startsWith("chrome-extension://") && tab.url.endsWith("/pages/softblock.html")) {
+                chrome.tabs.remove(tab.id, function() { });
+            }
+        });
+    });
+    chrome.tabs.create({ url: "pages/softblock.html" });
+
+    isLooping = true;
+    setTimeout(loopSoftblockTab, 10000);
+}
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+    // soft block
+    if (typeof changeInfo.url !== "undefined" && urlIsWebsite(changeInfo.url)) {
 
         var url = getCleanURL(changeInfo.url);
-        console.log(url);
 
         chrome.storage.sync.get(['blockList'], function(data) {
             if (data.blockList.includes(url)) {
-
+                openSoftblockTab();
             }
         });
 
