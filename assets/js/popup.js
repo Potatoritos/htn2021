@@ -79,6 +79,27 @@ chrome.storage.sync.get("warningCooldownInput", function(data) {
 function loop2() {
 	if (sessionEnd != -1) {
 		var timeLeft = sessionEnd - parseInt(Date.now()/1000);
+        if (timeLeft <= 0) {
+            sessionEnd = -1;
+            document.getElementById("onOffButtonFunction").disabled = false;
+            document.getElementById("warningCooldownInput").disabled = false;
+            document.getElementById("blockReason").disabled = false;
+            document.getElementById("bwSelect").disabled = false;
+            document.getElementById("blockedSitesTextArea").disabled = false;
+            document.getElementById("toggleSoftBlock").disabled = false;
+            document.getElementById("saveBlockChangesButton").disabled = false;
+            document.getElementById("saveSettingChangesButton").disabled = false;
+            document.getElementById("onOffButton").src = "assets/img/logooff256.png";
+
+            enableCurBtn("plus1h");
+            enableCurBtn("plus10m");
+            enableCurBtn("plus1m");
+            enableCurBtn("minus1h");
+            enableCurBtn("minus10m");
+            enableCurBtn("minus1m");
+            document.getElementById("blockTimer").innerHTML = "00:00:00";
+            return;
+        }
 		var hours = Math.floor(timeLeft/3600);
 		var minutes = Math.floor((timeLeft%3600)/60);
 		var seconds = timeLeft%60;
