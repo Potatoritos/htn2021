@@ -9,6 +9,12 @@
                 min-width: 300px;
             }
         </style>
+    <script src="https://www.gstatic.com/firebasejs/8.2.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.4/firebase-auth.js"></script>
+    
+    <script src="./assets/js/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
     </head>
     <body>
         <div class="w-full bg-white">
@@ -20,7 +26,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
-                          <div id="coins" class="ml-1 float-right font-semibold	">727</div>
+                          <div id="coins" class="ml-1 float-right font-semibold	">0</div>
                         </div>
                     </div>
                 </header>
@@ -80,6 +86,15 @@
                 </div>
                 <div id="section-4" class="hidden">
                     <p class="text-base">Leaderboard:</p>
+                    <div>
+                        You must sign into Google to use this feature.
+                        <div id='sign-in'>Sign In</div>
+                        <button id="userstatus">User Status</button>
+                            <script src="./assets/js/sigin.js"></script>
+                    </div>
+                    <div>
+                        
+                    </div>
                 </div>
                 <div id="section-3" class="hidden">
                     <p class="text-base">Settings:</p>
