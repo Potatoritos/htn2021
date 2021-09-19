@@ -3,9 +3,10 @@ var default_settings = {
     blockReason: "reason",
     isWhitelist: false,
     softblockEnabled: false,
-    softblockPeriod: 300,
+    softblockPeriod: 300, // seconds
     blockList: ["duckduckgo.com"],
-    blockEnabled: false
+    blockEnabled: false,
+    sessionLength: 3600 // seconds
 };
 
 function initSettings() {
@@ -20,9 +21,13 @@ function initSettings() {
     }
 }
 
-function updateSetting(key, val) {
+function updateSetting(key, val, updateStorage = false) {
     settings[key] = val;
     console.log(`[SETTING CHANGE] ${key} = ${val}`);
+
+    if (updateStorage) {
+        chrome.storage.sync.set({[key]: val}, function() {});
+    }
 
     // if statement hell
     if ((((key === "blockList" || key === "isWhitelist" || key === "softblockEnabled") && settings.blockEnabled) || (key === "blockEnabled" && val)) && !settings.softblockEnabled && !settings.isWhitelist) {
@@ -36,6 +41,16 @@ function updateSetting(key, val) {
     if ((key === "softblockEnabled" && val) || (key === "blockEnabled" && !val)) {
         console.log("Hard block disabled.");
         chrome.webRequest.onBeforeRequest.removeListener(redirect);
+    }
+
+    if (key === "blockEnabled" && val) {
+        sessionEndTime = settings.sessionLength;
+    }
+    if (key === "blockEnabled" && !val) {
+        sessionEndTime = -1;
+    }
+    if (key === "sessionLength" && settings.blockEnabled) {
+        sessionEndTime = val;
     }
 }
 
@@ -116,14 +131,33 @@ function updateListener(urls) {
 
 
 var doSoftLoop = false;
-var softLoopCnt = 0;
+var softLoopCnt = -1;
+
+var sessionEndTime = -1;
+var sessionCnt = -1;
 
 function loop() {
-    if (doSoftLoop) {
+    if (isNaN(sessionEndTime) && settings.blockEnabled) {
+        sessionEndTime = settings.sessionLength;
+    }
+    if (sessionEndTime != -1) {
+        sessionCnt++;
+        console.log(`sessionCnt/sessionEndTime: ${sessionCnt}/${sessionEndTime}`);
+    } else {
+        sessionCnt = -1;
+    }
+
+    if (sessionEndTime != -1 && sessionCnt >= sessionEndTime) {
+        sessionEndTime = -1;
+        updateSetting("blockEnabled", false, true);
+    }
+
+    if (doSoftLoop && settings.blockEnabled && settings.softblockEnabled) {
         softLoopCnt++;
         console.log(`softLoopCnt: ${softLoopCnt}`);
     } else {
         softLoopCnt = -1;
+        doSoftLoop = false;
     }
 
     if (softLoopCnt != -1 && softLoopCnt >= settings.softblockPeriod) {
@@ -171,6 +205,7 @@ function openSoftblockTab() {
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     // soft block
+    if (!settings.softblockEnabled || !settings.blockEnabled) return;
     if (typeof changeInfo.url !== "undefined" && urlIsWebsite(changeInfo.url)) {
         if (urlIsDistracting(changeInfo.url)) {
             openSoftblockTab();
