@@ -1,3 +1,6 @@
+var titles = ["", "Home", "Blocked Sites", "Settings"];
+var sessionEnd = -1;
+
 for (var i = 1; i <= 3; i++) {
     (function () {
         var temp = i;
@@ -14,6 +17,7 @@ function showSection(x) {
     }
     document.getElementById("section-" + x).style.display = "block";
     document.getElementById("showSection" + x).classList.add("text-blue-700");
+    document.getElementById("title").innerText = titles[x];
 }
 
 
@@ -48,14 +52,22 @@ chrome.storage.sync.get("blockEnabled", function(data) {
 	// timer stuff
 });
 
+chrome.storage.sync.get("sessionEndTime", function(data) {
+	sessionEnd = data.sessionEndTime
+});
+
 function loop2() {
-	console.log("hey");
-	chrome.storage.sync.get("sessionEndTime", function(data) {
-		if (data.sessionEndTime != -1) {
-			var timeLeft = data.sessionEndTime - parseInt(Date.now()/1000);
-			console.log(timeLeft);
-		}
-	});
+	if (sessionEnd != -1) {
+		var timeLeft = sessionEnd - parseInt(Date.now()/1000);
+		var hours = Math.floor(timeLeft/3600);
+		var minutes = Math.floor((timeLeft%3600)/60);
+		var seconds = timeLeft%60;
+		
+		var z = n => n >= 100 ? n : ('0' + n).slice(-2);
+		
+		document.getElementById("blockTimer").innerHTML = `${z(hours)}:${z(minutes)}:${z(seconds)}`;
+		console.log(timeLeft);
+	}
 }
 
 setInterval(loop2, 1000);
@@ -115,6 +127,10 @@ function turnOnBlock(e) {
     if(isSoftEnabled){ //enable softblock
         chrome.storage.sync.set({softblockPeriod: blockTime}, function() {});
     }
+	
+	chrome.storage.sync.get("sessionEndTime", function(data) {
+		sessionEnd = data.sessionEndTime
+	});
 	
 	document.getElementById("onOffButton").style.fill = "green";
 	chrome.storage.sync.set({blockEnabled: true}, function() {});
