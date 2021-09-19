@@ -38,6 +38,28 @@ chrome.storage.sync.get("isWhitelist", function(data){
     opt[0+(data.isWhitelist)].setAttribute("selected", "selected");
 });
 
+chrome.storage.sync.get("blockEnabled", function(data) {
+	if (data.blockEnabled) {
+		document.getElementById("onOffButton").style.fill = "green";
+	} else {
+		document.getElementById("onOffButton").style.fill = "red";
+	}
+	
+	// timer stuff
+});
+
+function loop2() {
+	console.log("hey");
+	chrome.storage.sync.get("sessionEndTime", function(data) {
+		if (data.sessionEndTime != -1) {
+			var timeLeft = data.sessionEndTime - parseInt(Date.now()/1000);
+			console.log(timeLeft);
+		}
+	});
+}
+
+setInterval(loop2, 1000);
+
 var toggleSoft = document.getElementById("toggleSoftBlock"), toggleSoftButton = document.getElementById("toggleSoftBlockButton");
 toggleSoft.addEventListener('click', function () {
     if (isSoftEnabled) {
@@ -89,10 +111,14 @@ function turnOnBlock(e) {
         console.log("BlockReason saved: ");
         console.log(blockReasonValue);
     });
-    var blockTime = document.getElementById("blockTimeInput").value*60000;
+    var blockTime = document.getElementById("blockTimeInput").value*60;
     if(isSoftEnabled){ //enable softblock
         chrome.storage.sync.set({softblockPeriod: blockTime}, function() {});
     }
+	
+	document.getElementById("onOffButton").style.fill = "green";
+	chrome.storage.sync.set({blockEnabled: true}, function() {});
+	
     return false;
 }
 var form2 = document.getElementById('startBreak');
