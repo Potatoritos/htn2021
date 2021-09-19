@@ -3,6 +3,12 @@ function initBlockList() {
 
     var softblockEnabled;
 
+    chrome.storage.sync.get({blockReason: false}, function(data) {
+        chrome.storage.sync.set({blockReason: data.blockReason}, function() {
+            console.log("blockReason saved: " + data.blockReason);
+        });
+    });
+
     chrome.storage.sync.get({isWhitelist: false}, function(data) {
         chrome.storage.sync.set({isWhitelist: data.isWhitelist}, function() {
             console.log("isWhitelist saved: " + data.isWhitelist);
