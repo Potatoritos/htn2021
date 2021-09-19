@@ -5,7 +5,7 @@
         <link rel="stylesheet" href="./assets/css/tailwind.css" >
         <style>
             html{
-                min-height: 500px;
+                min-height: 590px;
                 min-width: 300px;
             }
         </style>
@@ -29,26 +29,36 @@
             <div class="py-2 px-2 ">
                 <div id="section-1">
                     <form id="startBreak">
-                        <div class="items-center">
-                            <button id="onOffButtonFunction" type="submit" ">
-                                <svg id="onOffButton" class="h-2/4 w-2/4 mx-auto" xmlns="http://www.w3.org/2000/svg" width="1792" height="1792" viewBox="0 0 1792 1792"><path d="M1664 896q0 156-61 298t-164 245-245 164-298 61-298-61-245-164-164-245-61-298q0-182 80.5-343t226.5-270q43-32 95.5-25t83.5 50q32 42 24.5 94.5t-49.5 84.5q-98 74-151.5 181t-53.5 228q0 104 40.5 198.5t109.5 163.5 163.5 109.5 198.5 40.5 198.5-40.5 163.5-109.5 109.5-163.5 40.5-198.5q0-121-53.5-228t-151.5-181q-42-32-49.5-84.5t24.5-94.5q31-43 84-50t95 25q146 109 226.5 270t80.5 343zm-640-768v640q0 52-38 90t-90 38-90-38-38-90v-640q0-52 38-90t90-38 90 38 38 90z"/></svg>
+                        <div class="object-center w-max">
+                            <button id="onOffButtonFunction" type="submit">
+                                <!--<svg id="onOffButton" class="h-2/4 w-2/4 mx-auto" xmlns="http://www.w3.org/2000/svg" width="1792" height="1792" viewBox="0 0 1792 1792"><path d="M1664 896q0 156-61 298t-164 245-245 164-298 61-298-61-245-164-164-245-61-298q0-182 80.5-343t226.5-270q43-32 95.5-25t83.5 50q32 42 24.5 94.5t-49.5 84.5q-98 74-151.5 181t-53.5 228q0 104 40.5 198.5t109.5 163.5 163.5 109.5 198.5 40.5 198.5-40.5 163.5-109.5 109.5-163.5 40.5-198.5q0-121-53.5-228t-151.5-181q-42-32-49.5-84.5t24.5-94.5q31-43 84-50t95 25q146 109 226.5 270t80.5 343zm-640-768v640q0 52-38 90t-90 38-90-38-38-90v-640q0-52 38-90t90-38 90 38 38 90z"/></svg>-->
+                                <img id="onOffButton" src="assets/img/logooff256.png" class="w-56 h-56 ml-7">
                             </button>
                         </div>
-                        <div class="text-sm">
-                            Block for 
-                            <input type="number" class="h-5 w-20" min="5" id="blockTimeInput" required>
-                            minutes
-                        </div>
-
-                        <div class="text-center">
+                        <div class="text-center m-2">
                             <span class="text-sm font-semibold text-center">What are you working on?</span>
                             <textarea id="blockReason" class="w-full mt-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required></textarea>
                         </div>
-
-						<div id="blockTimer" class="text-5xl text-center m-10">
-							00:00:00
-						</div>
                     </form>
+
+                    <div class="text-center">
+                        <div class="inline-flex">
+                            <button id="plus1h" class="w-20 bg-gray-100 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-l">+1h</button>
+                            <button id="plus10m" class="w-20 bg-gray-100 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-m">+10m</button>
+                            <button id="plus1m" class="w-20 bg-gray-100 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r">+1m</button>
+                        </div>
+                    </div>
+                    <div class="text-5xl text-center m-2">
+                        <span id="blockTimer" class="m-10">00:00:00</span>
+                    </div>
+                    <div class="text-center">
+                        <div class="inline-flex">
+                            <button id="minus1h" class="w-20 bg-gray-100 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-l">-1h</button>
+                            <button id="minus10m" class="w-20 bg-gray-100 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-m">-10m</button>
+                            <button id="minus1m" class="w-20 bg-gray-100 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r">-1m</button>
+                        </div>
+                    </div>
+
                 </div>
                 <div id="section-2" class="hidden">
                     <form id="submitBlockedSites">

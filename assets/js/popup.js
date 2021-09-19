@@ -44,8 +44,9 @@ chrome.storage.sync.get("isWhitelist", function(data){
 
 chrome.storage.sync.get("blockEnabled", function(data) {
 	if (data.blockEnabled) {
-		document.getElementById("onOffButton").style.fill = "green";
-		document.getElementById("blockTimeInput").disabled = true;
+		//document.getElementById("onOffButton").style.fill = "green";
+        document.getElementById("onOffButton").src = "assets/img/logo256.png";
+		//document.getElementById("blockTimeInput").disabled = true;
 		document.getElementById("onOffButtonFunction").disabled = true;
 		document.getElementById("warningCooldownInput").disabled = true;
 		document.getElementById("blockReason").disabled = true;
@@ -54,8 +55,16 @@ chrome.storage.sync.get("blockEnabled", function(data) {
 		document.getElementById("toggleSoftBlock").disabled = true;
 		document.getElementById("saveBlockChangesButton").disabled = true;
 		document.getElementById("saveSettingChangesButton").disabled = true;
+
+        enableCurBtn("plus1h");
+        enableCurBtn("plus10m");
+        enableCurBtn("plus1m");
+        enableCurBtn("minus1h");
+        enableCurBtn("minus10m");
+        enableCurBtn("minus1m");
+	
 	} else {
-		document.getElementById("onOffButton").style.fill = "red";
+        document.getElementById("onOffButton").src = "assets/img/logooff256.png";
 	}
 });
 
@@ -78,7 +87,25 @@ function loop2() {
 		
 		document.getElementById("blockTimer").innerHTML = `${z(hours)}:${z(minutes)}:${z(seconds)}`;
 		console.log(timeLeft);
-	}
+
+        //document.getElementById("blockTimeInput").disabled = true;
+        document.getElementById("onOffButtonFunction").disabled = true;
+        document.getElementById("warningCooldownInput").disabled = true;
+        document.getElementById("blockReason").disabled = true;
+        document.getElementById("bwSelect").disabled = true;
+        document.getElementById("blockedSitesTextArea").disabled = true;
+        document.getElementById("toggleSoftBlock").disabled = true;
+        document.getElementById("saveBlockChangesButton").disabled = true;
+        document.getElementById("saveSettingChangesButton").disabled = true;
+
+        disableCurBtn("plus1h");
+        disableCurBtn("plus10m");
+        disableCurBtn("plus1m");
+        disableCurBtn("minus1h");
+        disableCurBtn("minus10m");
+        disableCurBtn("minus1m");
+
+    }
 }
 
 setInterval(loop2, 100);
@@ -137,7 +164,7 @@ function turnOnBlock(e) {
     });
 	
 	// set timer
-    var blockTime = document.getElementById("blockTimeInput").value*60;
+    var blockTime = curTime;
     //if(isSoftEnabled){ //enable softblock //i don tt hink this should be here (?)
 	chrome.storage.sync.set({sessionLength: blockTime}, function() {});
 	var ddate = Date.now();
@@ -146,13 +173,14 @@ function turnOnBlock(e) {
     //}
 	
 	// visually turn on button
-	document.getElementById("onOffButton").style.fill = "green";
+	//document.getElementById("onOffButton").style.fill = "green";
+    document.getElementById("onOffButton").src = "assets/img/logo256.png";
 	
 	// turn on blocking
 	chrome.storage.sync.set({blockEnabled: true}, function() {});
 	
 	// disable popup functionality
-	document.getElementById("blockTimeInput").disabled = true;
+	//document.getElementById("blockTimeInput").disabled = true;
 	document.getElementById("onOffButtonFunction").disabled = true;
 	document.getElementById("warningCooldownInput").disabled = true;
 	document.getElementById("blockReason").disabled = true;
@@ -161,6 +189,13 @@ function turnOnBlock(e) {
 	document.getElementById("toggleSoftBlock").disabled = true;
 	document.getElementById("saveBlockChangesButton").disabled = true;
 	document.getElementById("saveSettingChangesButton").disabled = true;
+
+    disableCurBtn("plus1h");
+    disableCurBtn("plus10m");
+    disableCurBtn("plus1m");
+    disableCurBtn("minus1h");
+    disableCurBtn("minus10m");
+    disableCurBtn("minus1m");
 	
     return false;
 }
@@ -170,7 +205,6 @@ if (form2.attachEvent) {
 } else {
     form2.addEventListener("submit", turnOnBlock);
 }
-
 
 function changeSettings(e) {
 	if (e.preventDefault) e.preventDefault();
@@ -185,3 +219,69 @@ if (form3.attachEvent) {
 } else {
     form3.addEventListener("submit", changeSettings);
 }
+
+var curTime = 0;
+
+function plus1h() { curTime += 3600; updateCur(); }
+function plus10m() { curTime += 600; updateCur(); }
+function plus1m() { curTime += 60; updateCur(); }
+function minus1h() { curTime -= 3600; updateCur(); }
+function minus10m() { curTime -= 600; updateCur(); }
+function minus1m() { curTime -= 60; updateCur(); }
+
+function updateCur() {
+    console.log("wtf");
+    var hours = Math.floor(curTime/3600);
+    var minutes = Math.floor((curTime%3600)/60);
+    var seconds = curTime%60;
+    
+    var z = n => n >= 100 ? n : ('0' + n).slice(-2);
+    
+    document.getElementById("blockTimer").innerHTML = `${z(hours)}:${z(minutes)}:${z(seconds)}`;
+
+    if (curTime < 60) {
+        disableCurBtn("minus1m");
+    } else {
+        enableCurBtn("minus1m");
+    }
+    if (curTime < 600) {
+        disableCurBtn("minus10m");
+    } else {
+        enableCurBtn("minus10m");
+    }
+    if (curTime < 3600) {
+        disableCurBtn("minus1h");
+    } else {
+        enableCurBtn("minus1h");
+    }
+}
+
+function disableCurBtn(id) {
+    var btn = document.getElementById(id);
+    btn.classList.add("text-gray-400");
+    btn.classList.add("cursor-not-allowed");
+    btn.classList.remove("text-gray-800");
+    btn.classList.remove("hover:bg-gray-300");
+    btn.disabled = true;
+}
+function enableCurBtn(id) {
+    var btn = document.getElementById(id);
+    btn.classList.add("text-gray-800");
+    btn.classList.add("hover:bg-gray-300");
+    btn.classList.remove("text-gray-400");
+    btn.classList.remove("cursor-not-allowed");
+    btn.disabled = false;
+}
+
+document.getElementById("plus1h").addEventListener("click", plus1h);
+document.getElementById("plus10m").addEventListener("click", plus10m);
+document.getElementById("plus1m").addEventListener("click", plus1m);
+document.getElementById("minus1h").addEventListener("click", minus1h);
+document.getElementById("minus10m").addEventListener("click", minus10m);
+document.getElementById("minus1m").addEventListener("click", minus1m);
+
+updateCur();
+
+chrome.storage.sync.get("blockReason", function(data) {
+    document.getElementById("blockReason").innerHTML = data.blockReason;
+});
