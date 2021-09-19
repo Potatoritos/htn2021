@@ -22,13 +22,13 @@ function initSettings() {
     }
 }
 
-function updateSetting(key, val, updateStorage=false) {
+function updateStorage(key, val) {
+    chrome.storage.sync.set({[key]: val}, function() {});
+}
+
+function updateSetting(key, val) {
     settings[key] = val;
     console.log(`[SETTING CHANGE] ${key} = ${val}`);
-
-    if (updateStorage) {
-        chrome.storage.sync.set({[key]: val}, function() {});
-    }
 
     // if statement hell
     if ((((key === "blockList" || key === "isWhitelist" || key === "softblockEnabled") && settings.blockEnabled) || (key === "blockEnabled" && val)) && !settings.softblockEnabled && !settings.isWhitelist) {
@@ -45,10 +45,10 @@ function updateSetting(key, val, updateStorage=false) {
     }
 
     if (key === "blockEnabled" && val) {
-        updateSetting("sessionEndTime", parseInt(Date.now()/1000) + settings.sessionLength, updateStorage=true);
+        updateStorage("sessionEndTime", parseInt(Date.now()/1000) + settings.sessionLength);
     }
     if (key === "blockEnabled" && !val) {
-        updateSetting("sessionEndTime", -1, updateStorage=true);
+        updateStorage("sessionEndTime", -1);
     }
 }
 
@@ -133,14 +133,14 @@ var softLoopCnt = -1;
 
 function loop() {
     if ((isNaN(settings.sessionEndTime) || settings.sessionEndTime == -1) && settings.blockEnabled) {
-        updateSetting("sessionEndTime", parseInt(Date.now()/1000) + settings.sessionLength, updateStorage=true);
+        updateStorage("sessionEndTime", parseInt(Date.now()/1000) + settings.sessionLength);
     }
     if (settings.sessionEndTime != -1) {
         console.log(`Time left: ${settings.sessionEndTime - parseInt(Date.now()/1000)}/${settings.sessionLength}`);
     }
     if (settings.sessionEndTime != -1 && parseInt(Date.now()/1000) >= settings.sessionEndTime) {
-        updateSetting("sessionEndTime", -1, updateStorage=true);
-        updateSetting("blockEnabled", false, updateStorage=true);
+        updateStorage("sessionEndTime", -1);
+        updateStorage("blockEnabled", false);
     }
 
     if (doSoftLoop && settings.blockEnabled && settings.softblockEnabled) {

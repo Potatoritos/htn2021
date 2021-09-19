@@ -35,6 +35,7 @@ function closeAllDistractions() {
             });
         });
     });
+    close();
 }
 
 var button = document.getElementById("closeDistractionsButton");
