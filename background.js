@@ -15,6 +15,18 @@ function initBlockList() {
         updateListener(data.blockList)
     });
 
+    chrome.storage.sync.get({isWhitelist: false}, function(data) {
+        chrome.storage.sync.set({isWhitelist: data.isWhitelist}, function() {
+            console.log("isWhitelist saved: " + data.isWhitelist);
+        });
+    });
+
+    chrome.storage.sync.get({softblockEnabled: false}, function(data) {
+        chrome.storage.sync.set({softblockEnabled: data.softblockEnabled}, function() {
+            console.log("softblockEnabled saved: " + data.softblockEnabled);
+        });
+    });
+
 }
 
 chrome.runtime.onInstalled.addListener(function() {
@@ -70,6 +82,19 @@ function updateListener(urls) {
 }
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+    if (typeof changeInfo.url !== "undefined" && !changeInfo.url.startsWith("chrome://")) {
 
+        console.log(changeInfo);
+
+        var url = getCleanURL(changeInfo.url);
+        console.log(url);
+
+        chrome.storage.sync.get(['blockList'], function(data) {
+            if (data.blockList.includes(url)) {
+
+            }
+        });
+
+    }
 });
 
