@@ -1,5 +1,5 @@
 var settings = {};
-var default_settings = {
+var defaultSettings = {
     blockReason: "reason",
     isWhitelist: false,
     softblockEnabled: false,
@@ -11,9 +11,9 @@ var default_settings = {
 };
 
 function initSettings() {
-    // make sure all keys in default_settings are in chrome storage
-    // and populate settings with settings
-    for (let [key, val] of Object.entries(default_settings)) {
+    // make sure all keys in defaultSettings are in chrome storage
+    // and populate settings with the settings
+    for (let [key, val] of Object.entries(defaultSettings)) {
         chrome.storage.sync.get({[key]: val}, function(data) {
             chrome.storage.sync.set({[key]: data[key]}, function() {
                 updateSetting(key, data[key]);
