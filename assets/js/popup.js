@@ -232,6 +232,9 @@ function changeSettings(e) {
 	var warningCooldown = document.getElementById("warningCooldownInput").value;
 	chrome.storage.sync.set({softblockPeriod: warningCooldown}, function() {});
 	document.getElementById("savedSettings").classList.remove("hidden");
+    setTimeout(function() {
+        document.getElementById("savedSettings").classList.add("hidden");
+    }, 1500);
     return false;
 }
 var form3 = document.getElementById('submitSettingChanges');
