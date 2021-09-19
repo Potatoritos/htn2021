@@ -21,6 +21,13 @@ function initBlockList() {
             softblockEnabled = data.softblockEnabled;
         });
     });
+    
+    // the time in between each softblock reminder
+    chrome.storage.sync.get({softblockPeriod: 300000}, function(data) {
+        chrome.storage.sync.set({softblockEnabled: data.softblockPeriod}, function() {
+            console.log("softblockPeriod saved: " + data.softblockPeriod);
+        });
+    });
 
     chrome.storage.sync.get({blockList: []}, function(data) {
         // actual code
@@ -103,56 +110,41 @@ function updateListener(urls) {
 
 var isLooping = false;
 
-function isDistractionOpen() {
+function loopSoftblockTab() {
+    var b = false;
     chrome.storage.sync.get({blockList: []}, function(data) {
         chrome.tabs.query({}, function(tabs) {
-            tabs.forEach(function(tab) {
-
-                if (urlIsWebsite(tab.url)) {
+            isLooping = false;
+            for (var i = 0; i < tabs.length; i++) {
+                if (urlIsWebsite(tabs[i].url)) {
                 
-                    var url = getCleanURL(tab.url);
+                    var url = getCleanURL(tabs[i].url);
 
-                    console.log("=====");
-                    console.log(url);
-                    console.log(data.blockList);
-                    console.log(data.blockList.includes(url));
-                    console.log("=====");
 
                     if (data.blockList.includes(url)) {
-                        return true;
+                        isLooping = true;
+                        chrome.tabs.query({}, function(tabs) {
+                            tabs.forEach(function(tab) {
+                                if (tab.url.startsWith("chrome-extension://") && tab.url.endsWith("/pages/softblock.html")) {
+                                    chrome.tabs.remove(tab.id, function() { });
+                                }
+                            });
+                        });
+                        chrome.tabs.create({ url: "pages/softblock.html" });
+                        break;
                     }
                 }   
-
-            });
-        });
-    });
-    return false;
-}
-
-function loopSoftblockTab() {
-    console.log("loopSoftblockTab() start");
-    if (!isDistractionOpen()) {
-        console.log("loopSoftblockTab() wtf");
-        isLooping = false;
-        return;
-    }
-    console.log("loopSoftblockTab()");
-    
-    chrome.tabs.query({}, function(tabs) {
-        tabs.forEach(function(tab) {
-            if (tab.url.startsWith("chrome-extension://") && tab.url.endsWith("/pages/softblock.html")) {
-                chrome.tabs.remove(tab.id, function() { });
             }
         });
     });
-    chrome.tabs.create({ url: "pages/softblock.html" });
 
-    setTimeout(loopSoftblockTab, 10000);
+    chrome.storage.sync.get({softblockPeriod: 300000}, function(data) {
+        setTimeout(loopSoftblockTab, data.softblockPeriod);
+    });
 }
 
 function openSoftblockTab() {
     if (isLooping) return;
-    console.log("openSoftblockTab()");
     chrome.tabs.query({}, function(tabs) {
         tabs.forEach(function(tab) {
             if (tab.url.startsWith("chrome-extension://") && tab.url.endsWith("/pages/softblock.html")) {
@@ -163,7 +155,9 @@ function openSoftblockTab() {
     chrome.tabs.create({ url: "pages/softblock.html" });
 
     isLooping = true;
-    setTimeout(loopSoftblockTab, 10000);
+    chrome.storage.sync.get({softblockPeriod: 300000}, function(data) {
+        setTimeout(loopSoftblockTab, data.softblockPeriod);
+    });
 }
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
