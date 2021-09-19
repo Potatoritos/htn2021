@@ -1,3 +1,5 @@
+
+
 var settings = {};
 var defaultSettings = {
     blockReason: "reason",
@@ -7,7 +9,11 @@ var defaultSettings = {
     blockList: ["reddit.com", "youtube.com", "twitter.com"],
     blockEnabled: false,
     sessionLength: 3600, // seconds
-    sessionEndTime: -1 // unix time in s
+    sessionEndTime: -1, // unix time in s
+    coins: 0,
+    userid: Math.random().toString(36).substr(2)+Math.random().toString(36).substr(2),
+    displayname: "You",
+    leaderboard: "Default",
 };
 
 function initSettings() {
@@ -119,7 +125,7 @@ function updateListener(urls) {
     urls.forEach(function(url) {
         patterns.push(urlToPattern(url));
     });
-
+    console.log(patterns);
     if (chrome.webRequest.onBeforeRequest.hasListener(redirect)) {
         chrome.webRequest.onBeforeRequest.removeListener(redirect);
     }
@@ -142,7 +148,6 @@ function loop() {
         updateStorage("sessionEndTime", -1);
         updateStorage("blockEnabled", false);
     }
-
     if (doSoftLoop && settings.blockEnabled && settings.softblockEnabled) {
         softLoopCnt++;
         console.log(`softLoopCnt: ${softLoopCnt}`);
@@ -153,7 +158,6 @@ function loop() {
 
     if (softLoopCnt != -1 && softLoopCnt >= settings.softblockPeriod) {
         softLoopCnt = 0;
-
         chrome.tabs.query({}, function(tabs) {
             var b = true;
             tabs.forEach(function(tab) {
@@ -204,3 +208,10 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     }
 });
 
+function changeCoins(x){
+    settings.coins += x;
+    updateStorage("coins", settings.coins); 
+    var request = new XMLHttpRequest();
+    request.open('GET', 'http://localhost:5000/updatePoints?user_id=' + newuserid + "&coins=" +x, false);
+    request.send();
+}

@@ -1,7 +1,7 @@
-var titles = ["", "Home", "Blocked Sites", "Settings"];
+var titles = ["", "Home", "Blocked Sites", "Settings", "Restrictions"];
 var sessionEnd = -1;
 
-for (var i = 1; i <= 3; i++) {
+for (var i = 1; i <= 4; i++) {
     (function () {
         var temp = i;
         document.getElementById("showSection" + i).addEventListener('click', function () { showSection(temp) }, false);
@@ -10,7 +10,7 @@ for (var i = 1; i <= 3; i++) {
 }
 
 function showSection(x) {
-    for (var i = 1; i <= 3; i++) {
+    for (var i = 1; i <= 4; i++) {
         if (i == x) continue;
         document.getElementById("section-" + i).style.display = "none";
         document.getElementById("showSection" + i).classList.remove("text-blue-700");
@@ -248,11 +248,46 @@ if (form2.attachEvent) {
     form2.addEventListener("submit", turnOnBlock);
 }
 
+chrome.storage.sync.get("userid", function(data){
+    document.getElementById("changeUserId").value = data.userid;
+});
+chrome.storage.sync.get("displayname", function(data){
+    document.getElementById("changeDisplayName").value = data.displayname;
+    document.getElementById("displaynameLeader").value = data.displayname;
+});
+chrome.storage.sync.get("leaderboard", function(data){
+    document.getElementById("changeLeaderboard").value = data.leaderboard;
+    document.getElementById("leaderboardName").innerText = data.leaderboard;
+});
+
 function changeSettings(e) {
 	if (e.preventDefault) e.preventDefault();
 	var warningCooldown = document.getElementById("warningCooldownInput").value;
 	chrome.storage.sync.set({softblockPeriod: warningCooldown}, function() {});
 	document.getElementById("savedSettings").classList.remove("hidden");
+
+    var newuserid=  document.getElementById("changeUserId").value;
+    console.log(newuserid);
+    var request = new XMLHttpRequest();
+    request.open('GET', 'http://localhost:5000/getUserPoints?user_id=' + newuserid, false);
+    request.send(null);
+    var coins = parseInt(request.responseText);
+    chrome.storage.sync.set({coins:coins}, function(){});
+    chrome.storage.sync.set({userid:newuserid}, function(){});
+
+
+    var newdisplayName = document.getElementById("changeDisplayName").value;
+    request.open("GET", "http://localhost:5000/updateDisplay?user_id="+newuserid +"&display=" + newdisplayName, false);
+    request.send(null);
+
+    chrome.storage.sync.set({displayname:newdisplayName}, function(){});
+
+    var newleader = document.getElementById("changeLeaderboard").value;
+    request.open("GET", "http://localhost:5000/updateLeaderboard?user_id="+newuserid +"&leaderboard=" + newleader, false);
+    request.send(null);
+
+    chrome.storage.sync.set({leaderboard:newleader}, function(){});
+
     setTimeout(function() {
         document.getElementById("savedSettings").classList.add("hidden");
     }, 1500);
@@ -329,4 +364,8 @@ updateCur();
 
 chrome.storage.sync.get("blockReason", function(data) {
     document.getElementById("blockReason").innerHTML = data.blockReason;
+});
+
+chrome.storage.sync.get("coins", function(data){
+    document.getElementById("coins").innerHTML = data.coins;
 });

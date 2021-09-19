@@ -20,6 +20,7 @@
         "default_title": "Lighthouse"
     },
     "permissions": [
+        "http://localhost/*",
         "storage",
         "tabs",
         "webRequest",
