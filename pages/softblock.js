@@ -37,9 +37,9 @@ function closeAllDistractions() {
                     chrome.tabs.remove(tab.id, function() { });
                 }
             });
+            close();
         });
     });
-    close();
 }
 
 var button = document.getElementById("closeDistractionsButton");
