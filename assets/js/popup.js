@@ -89,6 +89,10 @@ function turnOnBlock(e) {
         console.log("BlockReason saved: ");
         console.log(blockReasonValue);
     });
+    var blockTime = document.getElementById("blockTimeInput").value*60000;
+    if(isSoftEnabled){ //enable softblock
+        chrome.storage.sync.set({softblockPeriod: blockTime}, function() {});
+    }
     return false;
 }
 var form2 = document.getElementById('startBreak');
