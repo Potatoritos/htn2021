@@ -17,7 +17,7 @@ function showSection(x) {
     }
     document.getElementById("section-" + x).style.display = "block";
     document.getElementById("showSection" + x).classList.add("text-blue-700");
-    document.getElementById("title").innerText = titles[x];
+    //document.getElementById("title").innerText = titles[x];
 }
 
 
@@ -45,11 +45,16 @@ chrome.storage.sync.get("isWhitelist", function(data){
 chrome.storage.sync.get("blockEnabled", function(data) {
 	if (data.blockEnabled) {
 		document.getElementById("onOffButton").style.fill = "green";
+		document.getElementById("onOffButtonFunction").disabled = true;
+		document.getElementById("blockTimeInput").disabled = true;
+		document.getElementById("blockReason").disabled = true;
+		document.getElementById("bwSelect").disabled = true;
+		document.getElementById("blockedSitesTextArea").disabled = true;
+		document.getElementById("toggleSoftBlock").disabled = true;
+		document.getElementById("saveBlockChangesButton").disabled = true;
 	} else {
 		document.getElementById("onOffButton").style.fill = "red";
 	}
-	
-	// timer stuff
 });
 
 chrome.storage.sync.get("sessionEndTime", function(data) {
@@ -118,11 +123,14 @@ if (form.attachEvent) {
 function turnOnBlock(e) {
     if (e.preventDefault) e.preventDefault();
     
+	// set block reason
     var blockReasonValue = document.getElementById("blockReason").value;
     chrome.storage.sync.set({blockReason: blockReasonValue}, function() {
         console.log("BlockReason saved: ");
         console.log(blockReasonValue);
     });
+	
+	// set timer
     var blockTime = document.getElementById("blockTimeInput").value*60;
     //if(isSoftEnabled){ //enable softblock //i don tt hink this should be here (?)
 	chrome.storage.sync.set({sessionLength: blockTime}, function() {});
@@ -131,8 +139,20 @@ function turnOnBlock(e) {
 	sessionEnd = parseInt(ddate/1000) + blockTime;
     //}
 	
+	// visually turn on button
 	document.getElementById("onOffButton").style.fill = "green";
+	
+	// turn on blocking
 	chrome.storage.sync.set({blockEnabled: true}, function() {});
+	
+	// disable popup functionality
+	document.getElementById("onOffButtonFunction").disabled = true;
+	document.getElementById("blockTimeInput").disabled = true;
+	document.getElementById("blockReason").disabled = true;
+	document.getElementById("bwSelect").disabled = true;
+	document.getElementById("blockedSitesTextArea").disabled = true;
+	document.getElementById("toggleSoftBlock").disabled = true;
+	document.getElementById("saveBlockChangesButton").disabled = true;
 	
     return false;
 }
