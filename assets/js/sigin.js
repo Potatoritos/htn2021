@@ -5,10 +5,10 @@ document.querySelector('#sign-in')
          if (response === 'success') window.close();
      });
 });
-document.getElementById('userstatus')
-  .addEventListener('click', function () {
-     chrome.runtime.sendMessage({ message: 'isUserSignedIn' }, 
-       function (response) {
-         alert(response);
-    });
-});
+// document.getElementById('userstatus')
+//   .addEventListener('click', function () {
+//      chrome.runtime.sendMessage({ message: 'isUserSignedIn' }, 
+//        function (response) {
+//          alert(response);
+//     });
+// });

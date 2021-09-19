@@ -1,5 +1,3 @@
-
-
 for (var i = 1; i <= 4; i++) {
     (function () {
         var temp = i;
@@ -104,6 +102,20 @@ if (form2.attachEvent) {
     form2.addEventListener("submit", turnOnBlock);
 }
 
+//LEADERBOARD
+var isSignedIn; 
+chrome.runtime.sendMessage({ message: 'isUserSignedIn' },
+    function (response) {
+        isSignedIn = !!response;
+        if(isSignedIn){
+            document.getElementById("signedIn").classList.remove("hidden");
+            document.getElementById("notSignedin").classList.add("hidden");
+        
+        }
+    });
 
+if(isSignedIn){
+
+} 
 
 
