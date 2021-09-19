@@ -4,7 +4,7 @@ var defaultSettings = {
     isWhitelist: false,
     softblockEnabled: false,
     softblockPeriod: 300, // seconds
-    blockList: ["reddit.com", "youtube.com"],
+    blockList: ["reddit.com", "youtube.com", "twitter.com"],
     blockEnabled: false,
     sessionLength: 3600, // seconds
     sessionEndTime: -1 // unix time in s

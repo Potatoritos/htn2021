@@ -72,8 +72,9 @@ chrome.storage.sync.get("sessionEndTime", function(data) {
 	sessionEnd = data.sessionEndTime
 });
 
-chrome.storage.sync.get("warningCooldownInput", function(data) {
-	
+chrome.storage.sync.get("softblockPeriod", function(data) {
+    console.log('bing bang bong in the ting in the tang in the bing bang');
+    document.getElementById("warningCooldownInput").value = data.softblockPeriod;
 });
 
 function loop2() {
