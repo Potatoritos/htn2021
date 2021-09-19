@@ -4,7 +4,7 @@ var default_settings = {
     isWhitelist: false,
     softblockEnabled: false,
     softblockPeriod: 300, // seconds
-    blockList: ["duckduckgo.com"],
+    blockList: ["reddit.com", "youtube.com"],
     blockEnabled: false,
     sessionLength: 3600, // seconds
     sessionEndTime: -1 // unix time in s
