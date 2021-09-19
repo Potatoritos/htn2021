@@ -70,7 +70,7 @@ function loop2() {
 	}
 }
 
-setInterval(loop2, 1000);
+setInterval(loop2, 100);
 
 var toggleSoft = document.getElementById("toggleSoftBlock"), toggleSoftButton = document.getElementById("toggleSoftBlockButton");
 toggleSoft.addEventListener('click', function () {
@@ -125,7 +125,7 @@ function turnOnBlock(e) {
     });
     var blockTime = document.getElementById("blockTimeInput").value*60;
     if(isSoftEnabled){ //enable softblock
-        chrome.storage.sync.set({softblockPeriod: blockTime}, function() {});
+        chrome.storage.sync.set({sessionLength: blockTime}, function() {});
     }
 	
 	chrome.storage.sync.get("sessionEndTime", function(data) {
