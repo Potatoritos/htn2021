@@ -45,13 +45,15 @@ chrome.storage.sync.get("isWhitelist", function(data){
 chrome.storage.sync.get("blockEnabled", function(data) {
 	if (data.blockEnabled) {
 		document.getElementById("onOffButton").style.fill = "green";
-		document.getElementById("onOffButtonFunction").disabled = true;
 		document.getElementById("blockTimeInput").disabled = true;
+		document.getElementById("onOffButtonFunction").disabled = true;
+		document.getElementById("warningCooldownInput").disabled = true;
 		document.getElementById("blockReason").disabled = true;
 		document.getElementById("bwSelect").disabled = true;
 		document.getElementById("blockedSitesTextArea").disabled = true;
 		document.getElementById("toggleSoftBlock").disabled = true;
 		document.getElementById("saveBlockChangesButton").disabled = true;
+		document.getElementById("saveSettingChangesButton").disabled = true;
 	} else {
 		document.getElementById("onOffButton").style.fill = "red";
 	}
@@ -59,6 +61,10 @@ chrome.storage.sync.get("blockEnabled", function(data) {
 
 chrome.storage.sync.get("sessionEndTime", function(data) {
 	sessionEnd = data.sessionEndTime
+});
+
+chrome.storage.sync.get("warningCooldownInput", function(data) {
+	
 });
 
 function loop2() {
@@ -146,13 +152,15 @@ function turnOnBlock(e) {
 	chrome.storage.sync.set({blockEnabled: true}, function() {});
 	
 	// disable popup functionality
-	document.getElementById("onOffButtonFunction").disabled = true;
 	document.getElementById("blockTimeInput").disabled = true;
+	document.getElementById("onOffButtonFunction").disabled = true;
+	document.getElementById("warningCooldownInput").disabled = true;
 	document.getElementById("blockReason").disabled = true;
 	document.getElementById("bwSelect").disabled = true;
 	document.getElementById("blockedSitesTextArea").disabled = true;
 	document.getElementById("toggleSoftBlock").disabled = true;
 	document.getElementById("saveBlockChangesButton").disabled = true;
+	document.getElementById("saveSettingChangesButton").disabled = true;
 	
     return false;
 }
@@ -163,3 +171,17 @@ if (form2.attachEvent) {
     form2.addEventListener("submit", turnOnBlock);
 }
 
+
+function changeSettings(e) {
+	if (e.preventDefault) e.preventDefault();
+	var warningCooldown = document.getElementById("warningCooldownInput").value;
+	chrome.storage.sync.set({softblockPeriod: warningCooldown}, function() {});
+	document.getElementById("savedSettings").classList.remove("hidden");
+    return false;
+}
+var form3 = document.getElementById('submitSettingChanges');
+if (form3.attachEvent) {
+    form3.attachEvent("submit", changeSettings);
+} else {
+    form3.addEventListener("submit", changeSettings);
+}

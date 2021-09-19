@@ -86,7 +86,17 @@
                     </form>
                 </div>
                 <div id="section-3" class="hidden">
-                    <p class="text-base">Settings:</p>
+					<form id="submitSettingChanges">
+						<p class="text-base">Settings:</p>
+						
+						<div class="text-sm">
+							Soft Block Reminder Cooldown:
+							<input type="number" class="h-5 w-20" min="5" id="warningCooldownInput">
+						</div>
+						
+						<button id="saveSettingChangesButton" class="round p-2 m-1 bg-gray-100 rounded shadow" type="submit">Save Changes</button>
+						<p class="hidden text-sm text-green-600" id="savedSettings">Saved!</p>
+					</form>
                 </div>
             </div>
             <nav class="fixed bottom-0 inset-x-0 flex justify-between shadow ">
