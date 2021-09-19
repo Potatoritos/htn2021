@@ -6,7 +6,8 @@ var default_settings = {
     softblockPeriod: 300, // seconds
     blockList: ["duckduckgo.com"],
     blockEnabled: false,
-    sessionLength: 3600 // seconds
+    sessionLength: 3600, // seconds
+    sessionEndTime: -1 // unix time in s
 };
 
 function initSettings() {
@@ -21,7 +22,7 @@ function initSettings() {
     }
 }
 
-function updateSetting(key, val, updateStorage = false) {
+function updateSetting(key, val, updateStorage=false) {
     settings[key] = val;
     console.log(`[SETTING CHANGE] ${key} = ${val}`);
 
@@ -44,13 +45,10 @@ function updateSetting(key, val, updateStorage = false) {
     }
 
     if (key === "blockEnabled" && val) {
-        sessionEndTime = settings.sessionLength;
+        updateSetting("sessionEndTime", parseInt(Date.now()/1000) + settings.sessionLength, updateStorage=true);
     }
     if (key === "blockEnabled" && !val) {
-        sessionEndTime = -1;
-    }
-    if (key === "sessionLength" && settings.blockEnabled) {
-        sessionEndTime = val;
+        updateSetting("sessionEndTime", -1, updateStorage=true);
     }
 }
 
@@ -133,23 +131,16 @@ function updateListener(urls) {
 var doSoftLoop = false;
 var softLoopCnt = -1;
 
-var sessionEndTime = -1;
-var sessionCnt = -1;
-
 function loop() {
-    if (isNaN(sessionEndTime) && settings.blockEnabled) {
-        sessionEndTime = settings.sessionLength;
+    if ((isNaN(settings.sessionEndTime) || settings.sessionEndTime == -1) && settings.blockEnabled) {
+        updateSetting("sessionEndTime", parseInt(Date.now()/1000) + settings.sessionLength, updateStorage=true);
     }
-    if (sessionEndTime != -1) {
-        sessionCnt++;
-        console.log(`sessionCnt/sessionEndTime: ${sessionCnt}/${sessionEndTime}`);
-    } else {
-        sessionCnt = -1;
+    if (settings.sessionEndTime != -1) {
+        console.log(`Time left: ${settings.sessionEndTime - parseInt(Date.now()/1000)}/${settings.sessionLength}`);
     }
-
-    if (sessionEndTime != -1 && sessionCnt >= sessionEndTime) {
-        sessionEndTime = -1;
-        updateSetting("blockEnabled", false, true);
+    if (settings.sessionEndTime != -1 && parseInt(Date.now()/1000) >= settings.sessionEndTime) {
+        updateSetting("sessionEndTime", -1, updateStorage=true);
+        updateSetting("blockEnabled", false, updateStorage=true);
     }
 
     if (doSoftLoop && settings.blockEnabled && settings.softblockEnabled) {
