@@ -124,13 +124,12 @@ function turnOnBlock(e) {
         console.log(blockReasonValue);
     });
     var blockTime = document.getElementById("blockTimeInput").value*60;
-    if(isSoftEnabled){ //enable softblock
-        chrome.storage.sync.set({sessionLength: blockTime}, function() {});
-    }
-	
-	chrome.storage.sync.get("sessionEndTime", function(data) {
-		sessionEnd = data.sessionEndTime
-	});
+    //if(isSoftEnabled){ //enable softblock //i don tt hink this should be here (?)
+	chrome.storage.sync.set({sessionLength: blockTime}, function() {});
+	var ddate = Date.now();
+	chrome.storage.sync.set({sessionEndTime: parseInt(ddate/1000) + blockTime}, function() {});
+	sessionEnd = parseInt(ddate/1000) + blockTime;
+    //}
 	
 	document.getElementById("onOffButton").style.fill = "green";
 	chrome.storage.sync.set({blockEnabled: true}, function() {});
