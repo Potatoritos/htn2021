@@ -13,7 +13,10 @@
 		"128": "./assets/img/logo128.png"
 	},
     "background": {
-        "service_worker": "background.js"
+        "scripts":[
+            "assets/js/jsrsasign-all-min.js",
+            "background.js"
+        ]
     },
     "browser_action":{
         "default_popup":"popup.html",
@@ -21,6 +24,7 @@
     },
     "permissions": [
         "storage",
+        "identity",
         "tabs",
         "webRequest",
         "webRequestBlocking",
@@ -29,5 +33,7 @@
     ],
     "web_accessible_resources": [
         "redirect.html"
-    ]
+    ],
+    "content_security_policy":"script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'"
+
 }

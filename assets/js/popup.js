@@ -1,3 +1,5 @@
+
+
 for (var i = 1; i <= 4; i++) {
     (function () {
         var temp = i;
@@ -101,4 +103,7 @@ if (form2.attachEvent) {
 } else {
     form2.addEventListener("submit", turnOnBlock);
 }
+
+
+
 
