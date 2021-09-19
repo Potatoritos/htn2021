@@ -39,6 +39,21 @@ toggleSoft.addEventListener('click', function () {
         toggleSoftButton.classList.remove("translate-x-0");
         toggleSoftButton.classList.add("translate-x-5");
         console.log(isSoftEnabled);
-
     }
 }, false);
+
+function processForm(e) {
+    if (e.preventDefault) e.preventDefault();
+    var rawBlocks = document.getElementById("blockedSitesTextArea").value.split("\n");
+    var newBlockedSites = rawBlocks.filter((a)=>a);
+    chrome.storage.sync.set({blockList: newBlockedSites}, function() {
+        console.log("BlockList saved: " + data.blockList);
+    });
+    return false;
+}
+var form = document.getElementById('submitBlockedSites');
+if (form.attachEvent) {
+    form.attachEvent("submit", processForm);
+} else {
+    form.addEventListener("submit", processForm);
+}

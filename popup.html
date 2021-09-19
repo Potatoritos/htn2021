@@ -39,14 +39,14 @@
                     </form>
                 </div>
                 <div id="section-2" class="hidden">
-                    <form>
+                    <form id="submitBlockedSites">
                         <span class="text-sm"><select class="rounded-md  text-sm">
                                 <option>Blocked</option>
                                 <option>Whitelisted</option>
                             </select> Sites:</span>
                         <textarea
                             class="w-full mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                            placeholder="Enter sites"></textarea>
+                            placeholder="Enter sites" id="blockedSitesTextArea"></textarea>
                             <p class="text-xs">Enter sites each on one line, like "example.com" or "example.com/folder". We will block/allow all URLs with that base.</p>
                         <!-- This example requires Tailwind CSS v2.0+ -->
                         <br>
@@ -69,7 +69,7 @@
                         </div>
                         <div class="hidden" name="classesTailwind" class=" bg-blue-600 translate-x-5 hidden"></div>
                         <br>
-                        <button class="round p-2 m-1 bg-gray-100 rounded shadow">Save Changes</button>
+                        <button class="round p-2 m-1 bg-gray-100 rounded shadow" type="submit">Save Changes</button>
                     </form>
                 </div>
                 <div id="section-3" class="hidden">
