@@ -134,20 +134,40 @@ setInterval(loop2, 100);
 
 var toggleSoft = document.getElementById("toggleSoftBlock"), toggleSoftButton = document.getElementById("toggleSoftBlockButton");
 toggleSoft.addEventListener('click', function () {
-    if (isSoftEnabled) {
+    if (!isSoftEnabled) {
+        isSoftEnabled = 1;
+        toggleSoft.classList.remove("bg-blue-600");
+        toggleSoft.classList.add("bg-gray-200");
+        toggleSoftButton.classList.add("translate-x-0");
+        toggleSoftButton.classList.remove("translate-x-5");
+
+        chrome.storage.sync.set({softblockEnabled: true}, function() {});
+    } else {
         isSoftEnabled = 0;
+        toggleSoft.classList.add("bg-blue-600");
+        toggleSoft.classList.remove("bg-gray-200");
+        toggleSoftButton.classList.remove("translate-x-0");
+        toggleSoftButton.classList.add("translate-x-5");
+
+        chrome.storage.sync.set({softblockEnabled: false}, function() {});
+    }
+}, false);
+
+chrome.storage.sync.get("softblockEnabled", function(data) {
+    if (data.softblockEnabled) {
+        isSoftEnabled = 1;
         toggleSoft.classList.remove("bg-blue-600");
         toggleSoft.classList.add("bg-gray-200");
         toggleSoftButton.classList.add("translate-x-0");
         toggleSoftButton.classList.remove("translate-x-5");
     } else {
-        isSoftEnabled = 1;
+        isSoftEnabled = 0;
         toggleSoft.classList.add("bg-blue-600");
         toggleSoft.classList.remove("bg-gray-200");
         toggleSoftButton.classList.remove("translate-x-0");
         toggleSoftButton.classList.add("translate-x-5");
     }
-}, false);
+});
 
 function processForm(e) {
     if (e.preventDefault) e.preventDefault();
