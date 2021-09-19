@@ -1,3 +1,8 @@
+
+chrome.storage.sync.get("blockReason", function(data) {
+    document.getElementById("workingon").innerHTML = data.blockReason;
+});
+
 /*
 console.log('test');
 var prevURL;

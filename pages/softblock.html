@@ -3,6 +3,7 @@
 	<head>
 		<title>Lighthouse</title>
 		<link rel="stylesheet" href="./assets/css/tailwind.css">
+		<link rel="stylesheet" href="style.css">
 		<style>
 		#title {
 			text-align: center;
@@ -62,7 +63,8 @@
 	<body>
 		<div>
 			<header>
-				<h1 id="title">Oops!</h1>
+                <h1 id="title">You wanted to work on <span id="workingon"></span></h1>
+                <br><br><br>
 				<div class="eyes">
 					<div class="eye">
 					  <div class="ball"></div>
@@ -72,11 +74,9 @@
 					  <div class="ball"></div>
 					</div>
 				  </div>
-				
-				
-				<p id="bigmsg">You tried to visit a distracting website. Are you sure you want to do this?</p>
 				<div style="text-align:center;"><button id="closeDistractionsButton">Remove Distractions</button></div>
-				<p id="smallmsg">Remember that you can always visit this website later!</p>
+                <br><br><br><br>
+				<p>Remember that you can always visit this website later!</p>
 			</header>
 		</div>
 		<script src="softblock.js"></script>

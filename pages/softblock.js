@@ -14,6 +14,10 @@ var balls = document.getElementsByClassName("ball");
 					}
 				  }
 
+chrome.storage.sync.get("blockReason", function(data) {
+    document.getElementById("workingon").innerHTML = data.blockReason;
+});
+
 function getCleanURL(url) {
     url = url.split('/')[2];
     if (url.split('.')[0] === "www") {
